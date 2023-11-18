@@ -10,7 +10,7 @@ import java.util.Random;
 public class Utils {
 
     private static ArrayList<String> arr = new ArrayList<>();
-    private static Random r = new Random();
+    private static final Random r = new Random();
 
     /**
      * 分页查询，特别支持课程表，学生表的分页查询
