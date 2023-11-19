@@ -96,6 +96,7 @@ public class AdminServ{
 
     }
 
+    //主菜单
     public void start(){
         while(quitFlag){
             System.out.println("========> 广东原神大学教务处 管理员界面 <========");
@@ -128,7 +129,12 @@ public class AdminServ{
                     queryCourse();
                     break;
                 case "8":
-                    System.out.println("前面的区域，以后再来探索吧");
+                    try {
+                        Utils.writeObjectToFile();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    //System.out.println("前面的区域，以后再来探索吧");
                     break;
                 case "0":
                     System.out.println("===退出管理系统===");
@@ -276,6 +282,7 @@ public class AdminServ{
             } else {
                 System.out.println("你要查询的学生信息如下：");
                 System.out.println(stu);
+                System.out.println(stu.getChosenCoursesString());
                 break;
             }
         }

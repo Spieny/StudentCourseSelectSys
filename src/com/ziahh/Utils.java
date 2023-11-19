@@ -4,6 +4,10 @@ import com.ziahh.beans.Course;
 import com.ziahh.modules.AdminServ;
 import com.ziahh.modules.StudentServ;
 import com.ziahh.beans.Student;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,6 +15,18 @@ public class Utils {
 
     private static ArrayList<String> arr = new ArrayList<>();
     private static final Random r = new Random();
+
+    public static void writeObjectToFile() throws Exception {
+        try(
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/students.data2"));
+                ObjectOutputStream oos2 = new ObjectOutputStream(new FileOutputStream("src/courses.data2"));
+                ) {
+            oos2.writeObject(AdminServ.getAllCourses());
+            oos.writeObject(StudentServ.getStudentAccounts());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 分页查询，特别支持课程表，学生表的分页查询

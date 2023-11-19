@@ -2,9 +2,10 @@ package com.ziahh.beans;
 
 import com.ziahh.Utils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Student {
+public class Student implements Serializable {
 
     private String studentName = "default";
     private String studentID = "00000000";
@@ -103,5 +104,15 @@ public class Student {
 
     public String toStringLine(){
         return "(" + studentID + ") " + studentName  + " " + studentSex;
+    }
+
+    public String getChosenCoursesString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("=========== 学生").append(getStudentName()).append("已选课程 ===========\n");
+        for (Course e:chosenCourses){
+            sb.append(e.toStringLine()).append("\n");
+        }
+        sb.append("=========== 学生").append(getStudentName()).append("已选课程 ===========");
+        return sb.toString();
     }
 }
