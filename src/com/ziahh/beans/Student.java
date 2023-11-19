@@ -1,5 +1,7 @@
 package com.ziahh.beans;
 
+import com.ziahh.Utils;
+
 import java.util.ArrayList;
 
 public class Student {
@@ -12,6 +14,19 @@ public class Student {
     private String password = "666666"; //默认密码7777777 身份证后六位
     private ArrayList<Course> chosenCourses = new ArrayList<>();
     //待添加......
+
+
+    public Student(String studentName, String studentAge, char studentSex, String password, ArrayList<Course> chosenCourses) {
+        this.studentName = studentName;
+        this.studentID = Utils.generateStudentID();
+        this.studentAge = studentAge;
+        this.studentSex = studentSex;
+        this.password = password;
+        this.chosenCourses = chosenCourses;
+    }
+
+    public Student() {
+    }
 
     //添加课程
     public void addCourse(Course c){

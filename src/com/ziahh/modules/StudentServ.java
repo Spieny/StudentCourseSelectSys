@@ -1,6 +1,7 @@
 package com.ziahh.modules;
 
 import com.ziahh.Utils;
+import com.ziahh.beans.Course;
 import com.ziahh.beans.Student;
 
 import java.util.ArrayList;
@@ -14,6 +15,23 @@ public class StudentServ {
 
     public static ArrayList<Student> getStudentAccounts() {
         return studentAccounts;
+    }
+
+    public static void init(){
+        ArrayList<Course> courses = new ArrayList<>();
+        courses.add(AdminServ.getAllCourses().get(0));
+        courses.add(AdminServ.getAllCourses().get(1));
+        courses.add(AdminServ.getAllCourses().get(3));
+        courses.add(AdminServ.getAllCourses().get(4));
+        courses.add(AdminServ.getAllCourses().get(6));
+        studentAccounts.add(new Student("黄萎病","18",'男',"114514",courses));
+        studentAccounts.add(new Student("绿萎病","24",'男',"114514",courses));
+        studentAccounts.add(new Student("蓝萎病","114",'男',"114514",courses));
+        studentAccounts.add(new Student("红萎病","16",'男',"114514",courses));
+        studentAccounts.add(new Student("紫萎病","12",'男',"114514",courses));
+        studentAccounts.add(new Student("青萎病","31",'男',"114514",courses));
+        studentAccounts.add(new Student("南通萎病","24",'男',"114514",courses));
+        studentAccounts.add(new Student("橙萎病","20",'男',"114514",courses));
     }
 
     private boolean quitFlag = true;

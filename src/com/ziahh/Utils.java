@@ -16,7 +16,7 @@ public class Utils {
      * 分页查询，特别支持课程表，学生表的分页查询
      * @param list
      * @param size 每一页展示的数量
-     * @param page 选择第几页
+     * @param page 选择第几页+
      * @return
      */
     public static String[] pagedQuery(ArrayList<?> list,int size,int page){
@@ -135,7 +135,7 @@ public class Utils {
      * 一个秘制的打印消息的方法，单纯为了在前后多打两行空行
      * @param s
      */
-    public static void printMessage (String s){
+    public static void printMessage(String s){
         System.out.println(" ");
         System.out.println(s);
         System.out.println(" ");

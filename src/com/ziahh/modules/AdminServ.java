@@ -39,7 +39,7 @@ public class AdminServ{
         allCourses.add(new Course("大学英语读写I","卓超","钟海楼04033"));
         allCourses.add(new Course("大学英语听说I","吴Jafeng","兴教楼303"));
         allCourses.add(new Course("定向越野","新华","体育馆"));
-        //allCourses.add(new Course("大学心理健康","唐立平","钟海楼03020"));
+        allCourses.add(new Course("大学心理健康","唐立平","钟海楼03020"));
         allCourses.add(new Course("思想道德与法治","刘伟","钟海楼04024"));
         allCourses.add(new Course("劳动教育","宋蕾","钟海楼05030"));
     }
@@ -88,9 +88,10 @@ public class AdminServ{
     public void start(){
         while(quitFlag){
             System.out.println("========> 广东原神大学教务处 管理员界面 <========");
-            System.out.println("1.添加学生  2.删除学生  3.修改学生  4.查询学生");
-            System.out.println("5.添加课程  6.修改课程  7.查询课程  8.未知领域");
-            System.out.println("0.退出系统");
+            System.out.println(" 1.添加学生  2.删除学生  3.修改学生  4.查询学生");
+            System.out.println(" 5.添加课程  6.修改课程  7.查询课程  8.未知领域");
+            System.out.println(" 0.退出系统");
+            System.out.println(" 输入指令：");
             String in = sc.next();
             switch (in){
                 case "1":
@@ -103,6 +104,7 @@ public class AdminServ{
                     modifyStudent();
                     break;
                 case "4":
+                    StudentServ.init();
                     queryStudent();
                     break;
                 case "5":
@@ -143,8 +145,7 @@ public class AdminServ{
                 }
             }
             System.out.println("------- 第" + page + "页 -------");
-            System.out.print("输入 1 返回上一页 | ");
-            System.out.println("输入 2 进入下一页 | 输入 0 退出查询");
+            System.out.println("输入 1 返回上一页 | 输入 2 进入下一页 | 输入 0 退出查询");
             command = sc.nextInt();
             if (command == 0){
                 break;}
@@ -168,7 +169,41 @@ public class AdminServ{
         System.out.println(newCourse);
     }
 
-    private void queryStudent() {
+    private void queryStudent() {int page = 1;
+        String studentID;
+        Student stu = null;
+        while (true){
+            System.out.println();
+            System.out.println("------- 第" + page + "页 -------");
+            String[] r = Utils.pagedQuery(StudentServ.getStudentAccounts(),5,page);
+            if (r != null) {
+                for (String s : r) {
+                    System.out.println(s);
+                }
+            }
+            System.out.println("------- 第" + page + "页 -------");
+            System.out.println("输入 1 返回上一页 | 输入 2 进入下一页 | 输入 0 退出查询");
+            System.out.println("请输入你要查询的学生的学号：");
+            studentID = sc.next();
+            if (studentID.equals("2") && page < (allCourses.size() / 5) + 1){
+                page++;
+                continue;//如果输入的是翻页指令，直接跳过下面的代码
+            }
+            if (studentID.equals("1") && page > 1){
+                page--;
+                continue;//如果输入的是翻页指令，直接跳过下面的代码
+            }
+
+            stu = getStudentbyID(studentID);
+            if (stu == null){
+                System.out.println("你输入的学生不存在！");
+            } else {
+                break;
+            }
+        }
+        System.out.println("你要查询的学生信息如下：");
+        System.out.println(stu);
+
     }
 
     private void modifyStudent() {
