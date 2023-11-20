@@ -32,16 +32,16 @@ public class AdminServ{
         //默认管理员
         adminAccounts.add(new Admin("超级管理员","admin","admin"));
         //Test
-        allCourses.add(new Course("高等数学","苏绿","明德楼B5202"));
-        allCourses.add(new Course("大学物理实验","高超","图海楼333"));
-        allCourses.add(new Course("程序设计基础","跟上赵叔的节奏","明德楼B2301"));
-        allCourses.add(new Course("大学物理","莫莫","钟海楼05031"));
-        allCourses.add(new Course("大学英语读写I","卓超","钟海楼04033"));
-        allCourses.add(new Course("大学英语听说I","吴Jafeng","兴教楼303"));
-        allCourses.add(new Course("定向越野","新华","体育馆"));
-        allCourses.add(new Course("大学心理健康","唐立平","钟海楼03020"));
-        allCourses.add(new Course("思想道德与法治","刘伟","钟海楼04024"));
-        allCourses.add(new Course("劳动教育","宋蕾","钟海楼05030"));
+        allCourses.add(new Course("高等数学","苏绿","明德楼B5202",8.5));
+        allCourses.add(new Course("大学物理实验","高超","图海楼333",5.5));
+        allCourses.add(new Course("程序设计基础","跟上赵叔的节奏","明德楼B2301",4));
+        allCourses.add(new Course("大学物理","莫莫","钟海楼05031",4));
+        allCourses.add(new Course("大学英语读写I","卓超","钟海楼04033",2));
+        allCourses.add(new Course("大学英语听说I","吴Jafeng","兴教楼303",2));
+        allCourses.add(new Course("定向越野","新华","体育馆",2));
+        allCourses.add(new Course("大学心理健康","唐立平","钟海楼03020",2));
+        allCourses.add(new Course("思想道德与法治","刘伟","钟海楼04024",2));
+        allCourses.add(new Course("劳动教育","宋蕾","钟海楼05030",0));
     }
 
     public void run(){
@@ -185,6 +185,7 @@ public class AdminServ{
         System.out.println("输入 n 修改课程名称");
         System.out.println("输入 t 修改课程教师");
         System.out.println("输入 c 修改课程教室");
+        System.out.println("输入 s 修改课程学分");
         command = sc.next();
         switch (command){
             case "n":
@@ -201,6 +202,18 @@ public class AdminServ{
                 System.out.println("将课程教室修改为：");
                 value = sc.next();
                 c.setCourseClassroom(value);
+                break;
+            case "s":
+                while(true){
+                    System.out.println("将课程学分修改为：");
+                    value = sc.next();
+                    if(Utils.requireLegalScore(value)){
+                        c.setCourseScore(Double.parseDouble(value));
+                        break;
+                    } else {
+                        System.out.println("出错了！请输入合法的数字。");
+                    }
+                }
                 break;
             default:
                 System.out.println("未知指令，请重试！");
@@ -365,7 +378,7 @@ public class AdminServ{
                     System.out.println("将学生性别修改为：");
                     value = sc.next();
                     if (Utils.requireLegalGender(value)){
-                        c.setStudentSex(value.toCharArray()[1]);
+                        c.setStudentSex(value.toCharArray()[0]);
                         break;
                     } else {
                         System.out.println("性别不合法，请重试！");

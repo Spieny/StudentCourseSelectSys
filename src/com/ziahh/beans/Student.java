@@ -99,10 +99,12 @@ public class Student implements Serializable {
     }
 
     public String getDataString(){
+        updateScore();
         return studentName + "," + studentID + "," +studentAge + "," +studentSex + "," + score;
     }
 
     public String toStringLine(){
+        updateScore();
         return "(" + studentID + ") " + studentName  + " " + studentSex;
     }
 
@@ -114,5 +116,11 @@ public class Student implements Serializable {
         }
         sb.append("=========== 学生").append(getStudentName()).append("已选课程 ===========");
         return sb.toString();
+    }
+
+    private void updateScore(){
+        for (Course c:chosenCourses){
+            this.score += c.getCourseScore();
+        }
     }
 }

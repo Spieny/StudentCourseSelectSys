@@ -10,6 +10,7 @@ public class Course implements Serializable {
     private String courseName;
     private String courseTeacher;
     private String courseClassroom;
+    private double courseScore;
 
     /**
      * id 由系统自动生成且唯一
@@ -17,11 +18,20 @@ public class Course implements Serializable {
      * @param course_teacher 课程老师
      * @param course_classroom 课程教室地点
      */
-    public Course(String course_name, String course_teacher, String course_classroom) {
+    public Course(String course_name, String course_teacher, String course_classroom,double score) {
         this.courseName = course_name;
         this.courseTeacher = course_teacher;
         this.courseClassroom = course_classroom;
         this.courseId = Utils.generateCourseID();
+        this.courseScore = score;
+    }
+
+    public double getCourseScore() {
+        return courseScore;
+    }
+
+    public void setCourseScore(double courseScore) {
+        this.courseScore = courseScore;
     }
 
     public Course() {
@@ -67,10 +77,11 @@ public class Course implements Serializable {
                 + "名称：'" + courseName+ '\''+ "\n"
                 + "教室：'" + courseClassroom + '\'' + "\n"
                 + "教师：" + courseTeacher + '\''+ "\n"
+                + "学分：" + courseScore + '\''+ "\n"
                 + "=========================";
     }
 
     public String toStringLine(){
-        return "(" + courseId + ") " + courseName +  " , " + courseClassroom + " ,教师：" + courseTeacher;
+        return "(" + courseId + ") [" + courseScore + "]" + courseName +  " , " + courseClassroom + " ,教师：" + courseTeacher;
     }
 }

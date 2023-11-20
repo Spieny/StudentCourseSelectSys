@@ -183,6 +183,25 @@ public class Utils {
     }
 
     /**
+     * 判断字符串能否被正确的转化为Double，返回布尔值
+     * @param in 输入的文本
+     * @return
+     */
+    public static boolean requireLegalScore(String in){
+        double result;
+        try{
+            result = Double.parseDouble(in);
+        } catch (Exception e){
+            return false;
+        }
+        if(result < 0){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * 检测输入的内容是否为男或女
      * @param in
      * @return
