@@ -30,9 +30,9 @@ public class MainServ {
 
         while(true){
             System.out.println("========>广东原神大学教务处<========");
-            System.out.println("1.管理员登录");
-            System.out.println("2.学生登录");
-            System.out.println("0.退出系统");
+            System.out.println(" 1.管理员登录");
+            System.out.println(" 2.学生登录");
+            System.out.println(" 0.退出系统");
             System.out.println("=================================");
             String in = sc.next();
             switch (in){

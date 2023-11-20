@@ -20,6 +20,7 @@ public class StudentServ {
         return studentAccounts;
     }
 
+    //注入数据，方便测试，后期删掉
     public static void init(){
         ArrayList<Course> courses = new ArrayList<>();
         courses.add(AdminServ.getAllCourses().get(0));
@@ -95,9 +96,12 @@ public class StudentServ {
                     break;
                 case "3":
                     StudentInquireCourses();
+                    break;
                 case "4":
                     StudentInquirePersonalInformation();
+                    break;
                 case "0":
+                    currentStudent = null; //将已登录的学生对象归为null
                     System.out.println("===退出学生系统===");
                     quitFlag = false;
                     break;
@@ -165,13 +169,70 @@ public class StudentServ {
     }
 
     private void StudentQuitCourse() {
+        int page = 1;
+        String command;
+        while (true){
+            System.out.println();
+            System.out.println("------- 第" + page + "页 -------");
+            String[] r = Utils.pagedQuery(currentStudent.getChosenCourses(),5,page);
+            if (r != null) {
+                for (String s : r) {
+                    System.out.println(s);
+                }
+            }
+            System.out.println("------- 第" + page + "页 -------");
+            System.out.println("输入 1 返回上一页 | 输入 2 进入下一页 | 输入 0 退出查询");
+            System.out.println("输入课程ID（c0xxxx）来选择你想退选的课程");
+            command = sc.next();
+            if (Objects.equals(command, "0")){
+                break;}
+            if (Objects.equals(command, "2") && page < (AdminServ.getAllCourses().size() / 5) + 1){
+                page++;continue;}
+            if (Objects.equals(command, "1") && page > 1){
+                page--;continue;}
+            Course c = getCourseByID(command);
+            if (c == null) {
+                System.out.println("此课程ID不存在！请重新输入。");
+            } else {
+                boolean isConfirmed = false;
+                while (true){
+                    System.out.println("你选择的课程为：");
+                    System.out.println(c.toStringLine());
+                    System.out.println("你确定吗？（y/n）");
+                    String confirm = sc.next();
+                    switch (confirm){
+                        case "y":
+                            //
+                            System.out.println("你已退选此课程");
+                            currentStudent.removeCourse(c);
+                            isConfirmed = true;
+                            break;
+                        case "n":
+                            System.out.println("取消退选此课程");
+                            isConfirmed = true;
+                            break;
+                        default:
+                            System.out.println("请重新输入！");
+                    }
+                    if (isConfirmed){
+                        break;
+                    }
+                }
+
+            }
+        }
     }
 
     private void StudentInquireCourses() {
+        System.out.println(currentStudent.getChosenCoursesString());
+        System.out.println("输入任意字符退出");
+        sc.next();
     }
 
     private void StudentInquirePersonalInformation() {
-
+        System.out.println(currentStudent.toString());
+        System.out.println("输入任意字符退出");
+        sc.next();
     }
 
     /**

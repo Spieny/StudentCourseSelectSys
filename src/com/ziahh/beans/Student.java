@@ -123,4 +123,8 @@ public class Student implements Serializable {
             this.score += c.getCourseScore();
         }
     }
+
+    public void removeCourse(Course c) {
+        this.chosenCourses.remove(c);
+    }
 }
