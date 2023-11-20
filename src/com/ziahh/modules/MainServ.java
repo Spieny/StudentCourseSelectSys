@@ -24,10 +24,11 @@ public class MainServ {
         return st;
     }
 
-    public void run() throws Exception {
+    public void run(){
+        AdminServ.init();
+        StudentServ.init();
 
         while(true){
-            Thread.sleep(333);
             System.out.println("========>广东原神大学教务处<========");
             System.out.println("1.管理员登录");
             System.out.println("2.学生登录");

@@ -28,7 +28,7 @@ public class AdminServ{
         //System.out.println("construtctor As");
     }
 
-    private void init(){
+    public static void init(){
         //默认管理员
         adminAccounts.add(new Admin("超级管理员","admin","admin"));
         //Test
