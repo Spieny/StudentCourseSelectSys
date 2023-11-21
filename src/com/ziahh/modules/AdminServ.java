@@ -19,6 +19,14 @@ public class AdminServ{
         return adminAccounts;
     }
 
+    public static void setAdminAccounts(ArrayList<Admin> adminAccounts) {
+        AdminServ.adminAccounts = adminAccounts;
+    }
+
+    public static void setAllCourses(ArrayList<Course> allCourses) {
+        AdminServ.allCourses = allCourses;
+    }
+
     public static ArrayList<Course> getAllCourses() {
         return allCourses;
     }
@@ -49,9 +57,6 @@ public class AdminServ{
     }
 
     public void login(){
-        //
-        init();
-        //
         if (adminAccounts.isEmpty()){
             System.out.println("还没有任何管理员账号，请注册！");
             return;
@@ -116,7 +121,6 @@ public class AdminServ{
                     modifyStudent();
                     break;
                 case "4":
-                    StudentServ.init();
                     queryStudent();
                     break;
                 case "5":
@@ -425,31 +429,47 @@ public class AdminServ{
 
         stu.setStudentID(Utils.generateStudentID());
 
-        MainServ.getStudentServ().getStudentAccounts().add(stu);
+        StudentServ.getStudentAccounts().add(stu);
         Utils.printMessage("添加学生成功！\n" + stu.toString());
     }
 
     private void deleteStudent(){
-        Utils.printMessage("请输入你想要删除的学生的ID：");
-        String id = sc.next();
-        Student stu = getStudentbyID(id);
-        if (stu != null){
-            while (true){
-                Utils.printMessage("确定删除学生：" + stu.getStudentName() + "? (y/n)");
-                String confirm = sc.next();
-                if (confirm.equals("y")){
-                    MainServ.getStudentServ().getStudentAccounts().remove(stu);
-                    Utils.printMessage("已删除！");
-                    break;
-                } else if (confirm.equals("n")){
-                    Utils.printMessage("你已经取消该操作！");
-                    break;
-                } else {
-                    Utils.printMessage("确定删除学生：" + stu.getStudentName() + "? (y/n)");
+        int page = 1;
+        String studentID;
+        Student stu = null;
+        while (true){
+            System.out.println();
+            System.out.println("------- 第" + page + "页 -------");
+            String[] r = Utils.pagedQuery(StudentServ.getStudentAccounts(),5,page);
+            if (r != null) {
+                for (String s : r) {
+                    System.out.println(s);
                 }
             }
-        } else {
-            Utils.printMessage("该id对应的学生不存在！");
+            System.out.println("------- 第" + page + "页 -------");
+            System.out.println("输入 1 返回上一页 | 输入 2 进入下一页 | 输入 0 退出查询");
+            System.out.println("请输入你要删除的学生的学号：");
+            studentID = sc.next();
+            if (studentID.equals("0")){
+                break;
+            }
+            if (studentID.equals("2") && page < (allCourses.size() / 5) + 1){
+                page++;
+                continue;//如果输入的是翻页指令，直接跳过下面的代码
+            }
+            if (studentID.equals("1") && page > 1){
+                page--;
+                continue;//如果输入的是翻页指令，直接跳过下面的代码
+            }
+
+            stu = getStudentbyID(studentID);
+            if (stu == null){
+                System.out.println("你输入的学生不存在！");
+            } else {
+                StudentServ.getStudentAccounts().remove(stu);
+                System.out.println("此学生删除成功！");
+                break;
+            }
         }
     }
 

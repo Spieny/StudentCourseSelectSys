@@ -15,13 +15,18 @@ public class StudentServ {
     private static Scanner sc = new Scanner(System.in);
     private static ArrayList<Student> studentAccounts = new ArrayList<>();
     private Student currentStudent = null;
+    private String[] lastQueriedResult;
+
+    public static void setStudentAccounts(ArrayList<Student> studentAccounts) {
+        StudentServ.studentAccounts = studentAccounts;
+    }
 
     public static ArrayList<Student> getStudentAccounts() {
         return studentAccounts;
     }
 
     //注入数据，方便测试，后期删掉
-    public static void init(){
+    /*public static void init(){
         ArrayList<Course> courses = new ArrayList<>();
         courses.add(AdminServ.getAllCourses().get(0));
         studentAccounts.add(new Student("黄萎病","18",'男',"114514",courses));
@@ -32,7 +37,7 @@ public class StudentServ {
         studentAccounts.add(new Student("青萎病","31",'男',"114514",courses));
         studentAccounts.add(new Student("南通萎病","24",'男',"114514",courses));
         studentAccounts.add(new Student("橙萎病","20",'男',"114514",courses));
-    }
+    }*/
 
     private boolean quitFlag = true;
 
@@ -114,11 +119,12 @@ public class StudentServ {
 
     private void StudentChooseCourse() {
         int page = 1;
+        int size = 5;
         String command;
         while (true){
             System.out.println();
             System.out.println("------- 第" + page + "页 -------");
-            String[] r = Utils.pagedQuery(AdminServ.getAllCourses(),5,page);
+            String[] r = Utils.pagedQuery(AdminServ.getAllCourses(),size,page);
             if (r != null) {
                 for (String s : r) {
                     System.out.println(s);
@@ -130,7 +136,7 @@ public class StudentServ {
             command = sc.next();
             if (Objects.equals(command, "0")){
                 break;}
-            if (Objects.equals(command, "2") && page < (AdminServ.getAllCourses().size() / 5) + 1){
+            if (Objects.equals(command, "2") && page < (AdminServ.getAllCourses().size() / size) + 1){
                 page++;continue;}
             if (Objects.equals(command, "1") && page > 1){
                 page--;continue;}
@@ -172,9 +178,9 @@ public class StudentServ {
         int page = 1;
         String command;
         while (true){
+            String[] r = Utils.pagedQuery(currentStudent.getChosenCourses(),5,page);
             System.out.println();
             System.out.println("------- 第" + page + "页 -------");
-            String[] r = Utils.pagedQuery(currentStudent.getChosenCourses(),5,page);
             if (r != null) {
                 for (String s : r) {
                     System.out.println(s);

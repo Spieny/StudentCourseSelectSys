@@ -25,9 +25,8 @@ public class MainServ {
     }
 
     public void run(){
-        AdminServ.init();
-        StudentServ.init();
-
+        System.out.println("读取数据中......");
+        DataReader.readAll();
         while(true){
             System.out.println("========>广东原神大学教务处<========");
             System.out.println(" 1.管理员登录");
@@ -53,6 +52,7 @@ public class MainServ {
                     }
                     break;
                 case "0":
+                    DataWriter.writeAll();
                     System.out.println("退出系统");
                     System.exit(0);
                 default:

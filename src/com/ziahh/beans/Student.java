@@ -111,8 +111,12 @@ public class Student implements Serializable {
     public String getChosenCoursesString(){
         StringBuilder sb = new StringBuilder();
         sb.append("=========== 学生").append(getStudentName()).append("已选课程 ===========\n");
-        for (Course e:chosenCourses){
-            sb.append(e.toStringLine()).append("\n");
+        if (this.chosenCourses.isEmpty()){
+            sb.append("你还没有选择任何课程\n");
+        } else {
+            for (Course e:chosenCourses){
+                sb.append(e.toStringLine()).append("\n");
+            }
         }
         sb.append("=========== 学生").append(getStudentName()).append("已选课程 ===========");
         return sb.toString();
@@ -126,5 +130,6 @@ public class Student implements Serializable {
 
     public void removeCourse(Course c) {
         this.chosenCourses.remove(c);
+        updateScore();
     }
 }
