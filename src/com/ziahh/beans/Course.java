@@ -1,8 +1,10 @@
 package com.ziahh.beans;
 
 import com.ziahh.Utils;
+import com.ziahh.enums.WeekDay;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 
 public class Course implements Serializable {
 
@@ -11,19 +13,43 @@ public class Course implements Serializable {
     private String courseTeacher;
     private String courseClassroom;
     private double courseScore;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private WeekDay weekday;
 
-    /**
-     * id 由系统自动生成且唯一
-     * @param course_name 课程名
-     * @param course_teacher 课程老师
-     * @param course_classroom 课程教室地点
-     */
-    public Course(String course_name, String course_teacher, String course_classroom,double score) {
-        this.courseName = course_name;
-        this.courseTeacher = course_teacher;
-        this.courseClassroom = course_classroom;
+    public WeekDay getWeekday() {
+        return weekday;
+    }
+
+    public void setWeekday(WeekDay weekday) {
+        this.weekday = weekday;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public Course(String courseName, String courseTeacher, String courseClassroom, double courseScore, LocalTime startTime, LocalTime endTime,WeekDay day) {
         this.courseId = Utils.generateCourseID();
-        this.courseScore = score;
+        this.courseName = courseName;
+        this.courseTeacher = courseTeacher;
+        this.courseClassroom = courseClassroom;
+        this.courseScore = courseScore;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.weekday = day;
     }
 
     public double getCourseScore() {

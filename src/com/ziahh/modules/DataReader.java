@@ -26,6 +26,7 @@ public class DataReader {
             AdminServ.setAllCourses(inputCourses);
             StudentServ.setStudentAccounts(inputStudents);
             System.out.println("读取本地数据成功！");
+
         } catch (Exception e) {
             System.out.println("写入失败:" + e.getMessage());
         }

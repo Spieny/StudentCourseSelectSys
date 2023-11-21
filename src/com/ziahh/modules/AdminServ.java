@@ -4,6 +4,10 @@ import com.ziahh.Utils;
 import com.ziahh.beans.Admin;
 import com.ziahh.beans.Course;
 import com.ziahh.beans.Student;
+import com.ziahh.enums.WeekDay;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -37,19 +41,22 @@ public class AdminServ{
     }
 
     public static void init(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime lt = LocalTime.parse("08:10",dtf);
+        LocalTime lt2 = LocalTime.parse("10:00",dtf);
         //默认管理员
         adminAccounts.add(new Admin("超级管理员","admin","admin"));
         //Test
-        allCourses.add(new Course("高等数学","苏绿","明德楼B5202",8.5));
-        allCourses.add(new Course("大学物理实验","高超","图海楼333",5.5));
-        allCourses.add(new Course("程序设计基础","跟上赵叔的节奏","明德楼B2301",4));
-        allCourses.add(new Course("大学物理","莫莫","钟海楼05031",4));
-        allCourses.add(new Course("大学英语读写I","卓超","钟海楼04033",2));
-        allCourses.add(new Course("大学英语听说I","吴Jafeng","兴教楼303",2));
-        allCourses.add(new Course("定向越野","新华","体育馆",2));
-        allCourses.add(new Course("大学心理健康","唐立平","钟海楼03020",2));
-        allCourses.add(new Course("思想道德与法治","刘伟","钟海楼04024",2));
-        allCourses.add(new Course("劳动教育","宋蕾","钟海楼05030",0));
+        allCourses.add(new Course("高等数学","苏绿","明德楼B5202",8.5,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("大学物理实验","高超","图海楼333",5.5,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("程序设计基础","跟上赵叔的节奏","明德楼B2301",4,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("大学物理","莫莫","钟海楼05031",4,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("大学英语读写I","卓超","钟海楼04033",2,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("大学英语听说I","吴Jafeng","兴教楼303",2,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("定向越野","新华","体育馆",2,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("大学心理健康","唐立平","钟海楼03020",2,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("思想道德与法治","刘伟","钟海楼04024",2,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("劳动教育","宋蕾","钟海楼05030",0,lt,lt2, WeekDay.MONDAY));
     }
 
     public void run(){
