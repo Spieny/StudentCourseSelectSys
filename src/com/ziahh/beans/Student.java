@@ -5,6 +5,8 @@ import com.ziahh.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import static com.ziahh.Utils.WEEKDAYS;
+
 public class Student implements Serializable {
 
     private String studentName = "default";
@@ -14,6 +16,7 @@ public class Student implements Serializable {
     private double score = 0.0; //学分
     private String password = "666666"; //默认密码
     private ArrayList<Course> chosenCourses = new ArrayList<>();
+    private static final long serialVersionUID = -5225586180334516497L;
     //待添加......
     private int loginTimes = 0;
 
@@ -40,6 +43,10 @@ public class Student implements Serializable {
     //添加课程
     public void addCourse(Course c){
         this.chosenCourses.add(c);
+    }
+
+    public void setChosenCourses(ArrayList<Course> chosenCourses) {
+        this.chosenCourses = chosenCourses;
     }
 
     //获取学生个人课表
@@ -124,7 +131,7 @@ public class Student implements Serializable {
     public String getChosenCoursesString(){
         updateScore();
         StringBuilder sb = new StringBuilder();
-        sb.append("=============== 学生").append(getStudentName()).append("已选课程 ===============\n");
+        sb.append("================ 学生").append(getStudentName()).append("已选课程 ================\n");
         if (this.chosenCourses.isEmpty()){
             sb.append("你还没有选择任何课程\n");
         } else {
@@ -132,11 +139,12 @@ public class Student implements Serializable {
                 sb.append(e.toStringLine()).append("\n");
             }
         }
-        sb.append("=============== 学生").append(getStudentName()).append("已选课程 ===============");
+        sb.append("================ 学生").append(getStudentName()).append("已选课程 ================");
         return sb.toString();
     }
 
     private void updateScore(){
+        score = 0;
         for (Course c:chosenCourses){
             this.score += c.getCourseScore();
         }
@@ -146,4 +154,29 @@ public class Student implements Serializable {
         this.chosenCourses.remove(c);
         updateScore();
     }
+
+    public void showCourseSchedule(){
+        StringBuilder schedule = new StringBuilder();
+        schedule.append("===========================================\n");
+        for (int i = 0; i < WEEKDAYS.length; i++) {
+            ArrayList<Course> todayCourses = new ArrayList<>();
+            schedule.append(WEEKDAYS[i]).append(":\n");
+            for (Course c:chosenCourses){
+                if (c.getWeekdays().contains(WEEKDAYS[i])){
+                    todayCourses.add(c);
+                }
+            }
+            todayCourses.sort(Course::compareTo);
+            if (!todayCourses.isEmpty()){
+                for (Course c : todayCourses){
+                    schedule.append(c.toSchduleLine()).append("\n");
+                }
+            } else {
+                schedule.append("-今日无课-\n");
+            }
+        }
+        schedule.append("===========================================\n");
+        System.out.println(schedule);
+    }
+
 }

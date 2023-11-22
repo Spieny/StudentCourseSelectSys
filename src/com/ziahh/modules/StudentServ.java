@@ -42,6 +42,7 @@ public class StudentServ {
     private boolean quitFlag = true;
 
     public StudentServ(){
+        AdminServ.updateStudentCourses();
     }
 
     public void run(){
@@ -379,13 +380,15 @@ public class StudentServ {
     }
 
     private void StudentInquireCourses() {
-        System.out.println(currentStudent.getChosenCoursesString());
+        currentStudent.showCourseSchedule();
         System.out.println("输入任意字符退出");
         sc.next();
     }
 
     private void StudentInquirePersonalInformation() {
         System.out.println(currentStudent.toString());
+        System.out.println(" ");
+        System.out.println(currentStudent.getChosenCoursesString());
         System.out.println("输入任意字符退出");
         sc.next();
     }

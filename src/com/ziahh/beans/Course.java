@@ -2,14 +2,14 @@ package com.ziahh.beans;
 
 import com.ziahh.Utils;
 import com.ziahh.enums.WeekDay;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringJoiner;
 
-public class Course implements Serializable {
+public class Course implements Serializable ,Comparable<Course>{
 
     private String courseId;
     private String courseName;
@@ -19,6 +19,7 @@ public class Course implements Serializable {
     private LocalTime startTime;
     private LocalTime endTime;
     private ArrayList<WeekDay> weekdays;
+    private static final long serialVersionUID = 8203570095223467865L;
 
     public LocalTime getStartTime() {
         return startTime;
@@ -122,5 +123,14 @@ public class Course implements Serializable {
 
     public String toStringLine(){
         return "(" + courseId + ") [" + courseScore + "]" + courseName +  " , " + courseClassroom + " ,教师：" + courseTeacher;
+    }
+
+    public String toSchduleLine(){
+        return courseName + "|" + courseTeacher + "|" + courseClassroom + "|" + startTime + "——" + endTime;
+    }
+
+    @Override
+    public int compareTo(@NotNull Course o) {
+        return startTime.compareTo(o.startTime);
     }
 }

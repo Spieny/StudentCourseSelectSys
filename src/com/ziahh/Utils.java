@@ -1,6 +1,7 @@
 package com.ziahh;
 
 import com.ziahh.beans.Course;
+import com.ziahh.enums.WeekDay;
 import com.ziahh.modules.AdminServ;
 import com.ziahh.modules.StudentServ;
 import com.ziahh.beans.Student;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Utils {
+
+    public static final WeekDay[] WEEKDAYS = {WeekDay.MONDAY,WeekDay.TUESDAY,WeekDay.WEDNESDAY,WeekDay.THURSDAY,WeekDay.FRIDAY,WeekDay.SATURDAY,WeekDay.SUNDAY};
 
     private static ArrayList<String> arr = new ArrayList<>();
     private static final Random r = new Random();

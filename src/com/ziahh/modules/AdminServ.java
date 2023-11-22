@@ -5,6 +5,7 @@ import com.ziahh.beans.Admin;
 import com.ziahh.beans.Course;
 import com.ziahh.beans.Student;
 import com.ziahh.enums.WeekDay;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -115,9 +116,8 @@ public class AdminServ{
     //主菜单
     public void start(){
         //执行完每个功能后都会回到这里，所以保存一次数据
-        DataWriter.writeAll();
-
         while(quitFlag){
+            DataWriter.writeAll();
             System.out.println("========> 广东原神大学教务处 管理员界面 <========");
             System.out.println(" 1.添加学生  2.删除学生  3.修改学生  4.查询学生");
             System.out.println(" 5.添加课程  6.修改课程  7.查询课程  8.未知领域");
@@ -149,6 +149,7 @@ public class AdminServ{
                     break;
                 case "8":
                     System.out.println("前面的区域，以后再来探索吧");
+                    //updateStudentCourses();
                     break;
                 case "0":
                     System.out.println("===退出管理系统===");
@@ -165,19 +166,24 @@ public class AdminServ{
         int page = 1;
         String courseID;
         Course c = null;
+        boolean isQuit = false;
+        boolean isEdited = false;
         while (true){
             System.out.println();
-            System.out.println("------- 第" + page + "页 -------");
+            System.out.println("--------------- 第" + page + "页 ---------------");
             String[] r = Utils.pagedQuery(allCourses,5,page);
             if (r != null) {
                 for (String s : r) {
                     System.out.println(s);
                 }
             }
-            System.out.println("------- 第" + page + "页 -------");
+            System.out.println("--------------- 第" + page + "页 ---------------");
             System.out.println("输入 1 返回上一页 | 输入 2 进入下一页 | 输入 0 退出查询");
             System.out.println("请输入你要的修改的课程的ID：");
             courseID = sc.next();
+            if (courseID.equals("0")){
+                isQuit = true;
+            }
             if (courseID.equals("2") && page < (allCourses.size() / 5) + 1){
                 page++;
                 continue;//如果输入的是翻页指令，直接跳过下面的代码
@@ -194,130 +200,149 @@ public class AdminServ{
                 break;
             }
         }
-        String command;
-        String value;
-        System.out.println("输入 n 修改课程名称");
-        System.out.println("输入 t 修改课程教师");
-        System.out.println("输入 c 修改课程教室");
-        System.out.println("输入 s 修改课程学分");
-        System.out.println("输入 time 修改课程上课时间");
-        System.out.println("输入 wd 修改上课星期");
-        command = sc.next();
-        switch (command){
-            case "n":
-                System.out.println("将课程名称修改为：");
-                value = sc.next();
-                c.setCourseName(value);
-                break;
-            case "t":
-                System.out.println("将课程教师修改为：");
-                value = sc.next();
-                c.setCourseTeacher(value);
-                break;
-            case "c":
-                System.out.println("将课程教室修改为：");
-                value = sc.next();
-                c.setCourseClassroom(value);
-                break;
-            case "s":
-                while(true){
-                    System.out.println("将课程学分修改为：");
+        while (true){
+            if (isQuit){
+                return;
+            }
+            String command;
+            String value;
+            System.out.println("输入 n 修改课程名称");
+            System.out.println("输入 t 修改课程教师");
+            System.out.println("输入 c 修改课程教室");
+            System.out.println("输入 s 修改课程学分");
+            System.out.println("输入 time 修改课程上课时间");
+            System.out.println("输入 wd 修改上课星期");
+            System.out.println("输入 quit 退出修改");
+            command = sc.next();
+            switch (command){
+                case "quit":
+                    isQuit = true;
+                    break;
+                case "n":
+                    isEdited = true;
+                    System.out.println("将课程名称修改为：");
                     value = sc.next();
-                    if(Utils.requireLegalScore(value)){
-                        c.setCourseScore(Double.parseDouble(value));
-                        break;
-                    } else {
-                        System.out.println("出错了！请输入合法的数字。");
+                    c.setCourseName(value);
+                    break;
+                case "t":
+                    isEdited = true;
+                    System.out.println("将课程教师修改为：");
+                    value = sc.next();
+                    c.setCourseTeacher(value);
+                    break;
+                case "c":
+                    isEdited = true;
+                    System.out.println("将课程教室修改为：");
+                    value = sc.next();
+                    c.setCourseClassroom(value);
+                    break;
+                case "s":
+                    isEdited = true;
+                    while(true){
+                        System.out.println("将课程学分修改为：");
+                        value = sc.next();
+                        if(Utils.requireLegalScore(value)){
+                            c.setCourseScore(Double.parseDouble(value));
+                            break;
+                        } else {
+                            System.out.println("出错了！请输入合法的数字。");
+                        }
                     }
-                }
-                break;
-            case "time":
-                LocalTime start = null;
-                LocalTime end = null;
+                    break;
+                case "time":
+                    isEdited = true;
+                    LocalTime start = null;
+                    LocalTime end = null;
 
-                while (true){
-                    try{
-                        System.out.println("请输入课程的上课时间（mm:ss）：");
-                        start = LocalTime.parse(sc.next(),dtf);
-                        c.setStartTime(start);
-                        break;
-                    } catch (Exception e){
-                        System.out.println("你输入的时间有误！请重试。");
-                        continue;
-                    }
-                }
-
-                while (true){
-                    try{
-                        System.out.println("请输入课程的下课时间（mm:ss）：");
-                        end = LocalTime.parse(sc.next(),dtf);
-                    } catch (Exception e){
-                        System.out.println("你输入的时间有误！请重试。");
-                        continue;
+                    while (true){
+                        try{
+                            System.out.println("请输入课程的上课时间（mm:ss）：");
+                            start = LocalTime.parse(sc.next(),dtf);
+                            c.setStartTime(start);
+                            break;
+                        } catch (Exception e){
+                            System.out.println("你输入的时间有误！请重试。");
+                            continue;
+                        }
                     }
 
-                    if (!end.isAfter(start)){
-                        System.out.println("结束时间不能在开始时间之前！重新输入！");
-                    } else {
-                        c.setEndTime(end);
-                        break;
+                    while (true){
+                        try{
+                            System.out.println("请输入课程的下课时间（mm:ss）：");
+                            end = LocalTime.parse(sc.next(),dtf);
+                        } catch (Exception e){
+                            System.out.println("你输入的时间有误！请重试。");
+                            continue;
+                        }
+
+                        if (!end.isAfter(start)){
+                            System.out.println("结束时间不能在开始时间之前！重新输入！");
+                        } else {
+                            c.setEndTime(end);
+                            break;
+                        }
                     }
-                }
-                break;
-            case "wd":
-                ArrayList<WeekDay> weekdays = new ArrayList<>();
-                System.out.println("请输入上课的星期：");
-                System.out.println("整数[0-6] : 星期日-星期六");
-                System.out.println("提示：输入 -1 退出输入星期");
-                while (true){
-                    boolean quitFlag = false;
-                    String weekdayInput = sc.next();
-                    switch (weekdayInput){
-                        case "1":
-                            weekdays.add(WeekDay.MONDAY);
-                            break;
-                        case "2":
-                            weekdays.add(WeekDay.TUESDAY);
-                            break;
-                        case "3":
-                            weekdays.add(WeekDay.WEDNESDAY);
-                            break;
-                        case "4":
-                            weekdays.add(WeekDay.THURSDAY);
-                            break;
-                        case "5":
-                            weekdays.add(WeekDay.FRIDAY);
-                            break;
-                        case "6":
-                            weekdays.add(WeekDay.SATURDAY);
-                            break;
-                        case "0":
-                            weekdays.add(WeekDay.SUNDAY);
-                            break;
-                        case "-1":
-                            if (weekdays.isEmpty()){
-                                System.out.println("至少需要输入一天！");
-                                continue;
-                            } else {
-                                quitFlag = true;
+                    break;
+                case "wd":
+                    isEdited = true;
+                    ArrayList<WeekDay> weekdays = new ArrayList<>();
+                    System.out.println("请输入上课的星期：");
+                    System.out.println("整数[0-6] : 星期日-星期六");
+                    System.out.println("提示：输入 -1 退出输入星期");
+                    while (true){
+                        boolean quitFlag = false;
+                        String weekdayInput = sc.next();
+                        switch (weekdayInput){
+                            case "1":
+                                weekdays.add(WeekDay.MONDAY);
                                 break;
-                            }
-                        default:
-                            System.out.println("你输入的内容有误！");
+                            case "2":
+                                weekdays.add(WeekDay.TUESDAY);
+                                break;
+                            case "3":
+                                weekdays.add(WeekDay.WEDNESDAY);
+                                break;
+                            case "4":
+                                weekdays.add(WeekDay.THURSDAY);
+                                break;
+                            case "5":
+                                weekdays.add(WeekDay.FRIDAY);
+                                break;
+                            case "6":
+                                weekdays.add(WeekDay.SATURDAY);
+                                break;
+                            case "0":
+                                weekdays.add(WeekDay.SUNDAY);
+                                break;
+                            case "-1":
+                                if (weekdays.isEmpty()){
+                                    System.out.println("至少需要输入一天！");
+                                    continue;
+                                } else {
+                                    quitFlag = true;
+                                    break;
+                                }
+                            default:
+                                System.out.println("你输入的内容有误！");
+                                break;
+                        }
+                        if (quitFlag){
+                            c.setWeekdays(weekdays);
                             break;
+                        }
                     }
-                    if (quitFlag){
-                        c.setWeekdays(weekdays);
-                        break;
-                    }
-                }
-                break;
-            default:
-                System.out.println("未知指令，请重试！");
-                break;
+                    break;
+                default:
+                    System.out.println("未知指令，请重试！");
+                    break;
+            }
+            if (isEdited){
+                System.out.println("修改完成！课程信息如下：");
+                System.out.println(c);
+                updateStudentCourses();
+            }
         }
-        System.out.println("修改完成！课程信息如下：");
-        System.out.println(c);
+
 
     }
 
@@ -326,14 +351,14 @@ public class AdminServ{
         int command = -1;
         while (true){
             System.out.println();
-            System.out.println("------- 第" + page + "页 -------");
+            System.out.println("--------------- 第" + page + "页 ---------------");
             String[] r = Utils.pagedQuery(allCourses,5,page);
             if (r != null) {
                 for (String s : r) {
                     System.out.println(s);
                 }
             }
-            System.out.println("------- 第" + page + "页 -------");
+            System.out.println("--------------- 第" + page + "页 ---------------");
             System.out.println("输入 1 返回上一页 | 输入 2 进入下一页 | 输入 0 退出查询");
             String courseID = sc.next();
             if (courseID.equals("2") && page < (allCourses.size() / 5) + 1){
@@ -494,6 +519,7 @@ public class AdminServ{
     private void modifyStudent() {
         int page = 1;
         boolean isQuit = false;
+        boolean isEdited = false;
         String studentID;
         Student c = null;
         while (true){
@@ -529,63 +555,73 @@ public class AdminServ{
                 break;
             }
         }
-        if(isQuit){
-            return;
-        }
-        String command;
-        String value;
-        System.out.println("输入 n 修改学生姓名");
-        System.out.println("输入 unban 解冻学生");
-        System.out.println("输入 a 修改学生年龄");
-        System.out.println("输入 p 修改学生密码");
-        System.out.println("输入 s 修改学生性别");
-        command = sc.next();
-        switch (command){
-            case "unban":
-                c.setLoginTimes(0);
-                System.out.println("解冻学生成功！");
-                break;
-            case "n":
-                System.out.println("将学生姓名修改为：");
-                value = sc.next();
-                c.setStudentName(value);
-                break;
-            case "a":
-                while (true){
-                    System.out.println("将学生年龄修改为：");
+        while (true){
+            if(isQuit){
+                return;
+            }
+            String command;
+            String value;
+            System.out.println("输入 n 修改学生姓名");
+            System.out.println("输入 unban 解冻学生");
+            System.out.println("输入 a 修改学生年龄");
+            System.out.println("输入 p 修改学生密码");
+            System.out.println("输入 s 修改学生性别");
+            System.out.println("输入 quit 退出修改");
+            command = sc.next();
+            switch (command){
+                case "unban":
+                    c.setLoginTimes(0);
+                    System.out.println("解冻学生成功！");
+                    break;
+                case "quit":
+                    isQuit = true;
+                    break;
+                case "n":
+                    isEdited = true;
+                    System.out.println("将学生姓名修改为：");
                     value = sc.next();
-                    if (Utils.requireLegalAge(value)){
-                        c.setStudentAge(value);
-                        break;
-                    } else {
-                        System.out.println("年龄不合法，请重试！");
+                    c.setStudentName(value);
+                    break;
+                case "a":
+                    isEdited = true;
+                    while (true){
+                        System.out.println("将学生年龄修改为：");
+                        value = sc.next();
+                        if (Utils.requireLegalAge(value)){
+                            c.setStudentAge(value);
+                            break;
+                        } else {
+                            System.out.println("年龄不合法，请重试！");
+                        }
                     }
-                }
-                break;
-            case "p":
-                System.out.println("将学生密码修改为：");
-                value = sc.next();
-                //也许可以设置密码安全要求
-                c.setPassword(value);
-                break;
-            case "s":
-                while (true){
-                    System.out.println("将学生性别修改为：");
+                    break;
+                case "p":
+                    isEdited = true;
+                    System.out.println("将学生密码修改为：");
                     value = sc.next();
-                    if (Utils.requireLegalGender(value)){
-                        c.setStudentSex(value.toCharArray()[0]);
-                        break;
-                    } else {
-                        System.out.println("性别不合法，请重试！");
+                    //也许可以设置密码安全要求
+                    c.setPassword(value);
+                    break;
+                case "s":
+                    isEdited = true;
+                    while (true){
+                        System.out.println("将学生性别修改为：");
+                        value = sc.next();
+                        if (Utils.requireLegalGender(value)){
+                            c.setStudentSex(value.toCharArray()[0]);
+                            break;
+                        } else {
+                            System.out.println("性别不合法，请重试！");
+                        }
                     }
-                }
-                break;
-            default:
-                System.out.println("未知指令，请重试！");
-        }
-        if (!command.equals("unban")){
-            System.out.println("修改完成！学生信息如下：");
-            System.out.println(c);
+                    break;
+                default:
+                    System.out.println("未知指令，请重试！");
+            }
+            if (isEdited){
+                System.out.println("修改完成！学生信息如下：");
+                System.out.println(c);
+            }
         }
     }
 
@@ -666,6 +702,25 @@ public class AdminServ{
         }
     }
 
+    public static void updateStudentCourses(){
+        long before = System.currentTimeMillis();
+        System.out.println("开始更新学生的课程信息");
+        for (Student s : StudentServ.getStudentAccounts()){
+            ArrayList<String> courseIDs = new ArrayList<>();
+            for(Course c : s.getChosenCourses()){
+                courseIDs.add(c.getCourseId());
+            }
+            ArrayList<Course> newCourses = new ArrayList<>();
+            for(String cid : courseIDs){
+                newCourses.add(getCourseByID(cid));
+            }
+
+            s.setChosenCourses(newCourses);
+        }
+        long after = System.currentTimeMillis();
+        System.out.println("更新完毕~用时：" + (after - before)+  "ms");
+    }
+
     /**
      * 通过学号获取学生对象，未找到则返回null
      * @param id
@@ -700,7 +755,7 @@ public class AdminServ{
      * @param id 课程id
      * @return 课程对象
      */
-    private Course getCourseByID(String id){
+    private static Course getCourseByID(String id){
         for (Course c:allCourses){
             if(c.getCourseId().equals(id)){
                 return c;
