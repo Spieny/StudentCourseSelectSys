@@ -19,7 +19,7 @@ public class DataWriter {
             oos.writeObject(AdminServ.getAdminAccounts());
             oos2.writeObject(AdminServ.getAllCourses());
             oos3.writeObject(StudentServ.getStudentAccounts());
-            System.out.println("保存本地数据成功！");
+            System.out.println("本地数据已保存");
         } catch (IOException e) {
             System.out.println("写入失败:" + e.getMessage());
         }

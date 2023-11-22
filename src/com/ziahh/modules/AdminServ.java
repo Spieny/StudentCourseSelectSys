@@ -41,7 +41,7 @@ public class AdminServ{
         //System.out.println("construtctor As");
     }
 
-    public static void init(){
+    /*public static void init(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime lt = LocalTime.parse("08:10",dtf);
         LocalTime lt2 = LocalTime.parse("10:00",dtf);
@@ -61,7 +61,7 @@ public class AdminServ{
         allCourses.add(new Course("大学心理健康","唐立平","钟海楼03020",2,lt,lt2, weekDays));
         allCourses.add(new Course("思想道德与法治","刘伟","钟海楼04024",2,lt,lt2, weekDays));
         allCourses.add(new Course("劳动教育","宋蕾","钟海楼05030",0,lt,lt2, weekDays));
-    }
+    }*/
 
     public void run(){
         login();

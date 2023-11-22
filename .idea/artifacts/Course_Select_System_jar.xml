@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Course-Select System:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Course_Select_System_jar</output-path>
+    <root id="archive" name="Course-Select System.jar">
+      <element id="module-output" name="Course-Select System" />
+    </root>
+  </artifact>
+</component>

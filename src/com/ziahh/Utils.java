@@ -5,9 +5,6 @@ import com.ziahh.modules.AdminServ;
 import com.ziahh.modules.StudentServ;
 import com.ziahh.beans.Student;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 

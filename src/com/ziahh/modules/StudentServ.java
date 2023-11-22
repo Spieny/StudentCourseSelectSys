@@ -1,6 +1,5 @@
 package com.ziahh.modules;
 
-import com.sun.jdi.connect.ListeningConnector;
 import com.ziahh.Utils;
 import com.ziahh.beans.Admin;
 import com.ziahh.beans.Course;
@@ -148,10 +147,10 @@ public class StudentServ {
                 if (confirmPassword.equals(newPassword)){
                     currentStudent.setPassword(newPassword);
                     System.out.println("修改密码成功！请牢记新密码！");
+                    DataWriter.writeAll();
                     break;
                 } else {
                     System.out.println("两次输入的密码不一致！");
-                    continue;
                 }
             } else {
                 System.out.println("你输入的原密码不正确！");
