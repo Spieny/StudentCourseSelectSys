@@ -16,16 +16,20 @@ public class Utils {
     private static ArrayList<String> arr = new ArrayList<>();
     private static final Random r = new Random();
 
-    public static void writeObjectToFile() throws Exception {
-        try(
-                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("src/students.data2"));
-                ObjectOutputStream oos2 = new ObjectOutputStream(new FileOutputStream("src/courses.data2"));
-                ) {
-            oos2.writeObject(AdminServ.getAllCourses());
-            oos.writeObject(StudentServ.getStudentAccounts());
-        } catch (Exception e){
-            e.printStackTrace();
+    /**
+     * 检测一个学生是否已经选择一门课程，基于课程id的唯一性编写。
+     * @param stu 学生
+     * @param c0 要判断的课程
+     * @return 已选择返回真，反之返回假
+     */
+    public static boolean isStudenetChosenSpecificCourse(Student stu,Course c0){
+        String courseID = c0.getCourseId();
+        for (Course c1 : stu.getChosenCourses()){
+            if (c1.getCourseId().equals(courseID)){
+                return true;
+            }
         }
+        return false;
     }
 
     /**

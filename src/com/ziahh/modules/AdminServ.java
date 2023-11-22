@@ -114,6 +114,9 @@ public class AdminServ{
 
     //主菜单
     public void start(){
+        //执行完每个功能后都会回到这里，所以保存一次数据
+        DataWriter.writeAll();
+
         while(quitFlag){
             System.out.println("========> 广东原神大学教务处 管理员界面 <========");
             System.out.println(" 1.添加学生  2.删除学生  3.修改学生  4.查询学生");
@@ -532,11 +535,16 @@ public class AdminServ{
         String command;
         String value;
         System.out.println("输入 n 修改学生姓名");
+        System.out.println("输入 unban 解冻学生");
         System.out.println("输入 a 修改学生年龄");
         System.out.println("输入 p 修改学生密码");
         System.out.println("输入 s 修改学生性别");
         command = sc.next();
         switch (command){
+            case "unban":
+                c.setLoginTimes(0);
+                System.out.println("解冻学生成功！");
+                break;
             case "n":
                 System.out.println("将学生姓名修改为：");
                 value = sc.next();
@@ -575,8 +583,10 @@ public class AdminServ{
             default:
                 System.out.println("未知指令，请重试！");
         }
-        System.out.println("修改完成！学生信息如下：");
-        System.out.println(c);
+        if (!command.equals("unban")){
+            System.out.println("修改完成！学生信息如下：");
+            System.out.println(c);
+        }
     }
 
     private void registerNewStudent() {

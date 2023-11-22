@@ -26,7 +26,7 @@ public class StudentServ {
     }
 
     //注入数据，方便测试，后期删掉
-    public static void init(){
+    /*public static void init(){
         ArrayList<Course> courses = new ArrayList<>();
         courses.add(AdminServ.getAllCourses().get(0));
         studentAccounts.add(new Student("黄萎病","18",'男',"114514",courses));
@@ -37,7 +37,7 @@ public class StudentServ {
         studentAccounts.add(new Student("青萎病","31",'男',"114514",courses));
         studentAccounts.add(new Student("南通萎病","24",'男',"114514",courses));
         studentAccounts.add(new Student("橙萎病","20",'男',"114514",courses));
-    }
+    }*/
 
     private boolean quitFlag = true;
 
@@ -64,16 +64,27 @@ public class StudentServ {
             if (account.equals("0")){ break;} //输入0退出系统
             System.out.println("请输入密码：");
             String password = sc.next();
-            //待修改 链接数据库 and MD5校验
+            //待修改 MD5校验
             Student stu = getStudentbyID(account);
             if (stu != null && stu.getPassword().equals(password)){
-                logined = true;
-                currentStudent = stu;
+                if (stu.getLoginTimes() >= 3){
+                    System.out.println("你的账号登录异常，已被冻结，请联系管理员解封！");
+                    continue;
+                } else {
+                    //如果登录成功，清除该学生的登录异常次数。
+                    stu.setLoginTimes(0);
+                    logined = true;
+                    currentStudent = stu;
+                }
             }
             //如果账号密码正确，跳出while循环
             if (logined){
                 break;
             } else {
+                if (stu != null){
+                    stu.setLoginTimes(stu.getLoginTimes() + 1);
+                    System.out.println(stu.getPassword());
+                }
                 System.out.println("账号或密码错误！");
             }
         }
@@ -85,10 +96,11 @@ public class StudentServ {
     }
 
     public void start(){
+        DataWriter.writeAll();
         while(quitFlag){
         System.out.println("========> 广东原神大学教务处 学生界面 <========");
         System.out.println("欢迎你！" + currentStudent.getStudentName() + "同学。");
-        System.out.println("1.选择课程  2.退选课程 3.查询课表 4.个人信息");
+        System.out.println("1.选择课程 2.退选课程 3.查询课表 4.个人信息");
         System.out.println("5.修改密码");
         System.out.println("0.退出系统");
             String in = sc.next();
@@ -105,6 +117,9 @@ public class StudentServ {
                 case "4":
                     StudentInquirePersonalInformation();
                     break;
+                case "5":
+                    StudentChangePassword();
+                    break;
                 case "0":
                     currentStudent = null; //将已登录的学生对象归为null
                     System.out.println("===退出学生系统===");
@@ -115,6 +130,33 @@ public class StudentServ {
             }
         }
         quitFlag = true;
+    }
+
+    private void StudentChangePassword() {
+        while (true){
+            System.out.println("请输入您原来的密码：");
+            System.out.println("(输入 0 退出修改)");
+            String orignalPassword = sc.next();
+
+            if (orignalPassword.equals("0")){return;}
+
+            System.out.println("请输入您的新密码：");
+            String newPassword = sc.next();
+            System.out.println("请再次输入您的新密码：");
+            String confirmPassword = sc.next();
+            if (orignalPassword.equals(currentStudent.getPassword())){
+                if (confirmPassword.equals(newPassword)){
+                    currentStudent.setPassword(newPassword);
+                    System.out.println("修改密码成功！请牢记新密码！");
+                    break;
+                } else {
+                    System.out.println("两次输入的密码不一致！");
+                    continue;
+                }
+            } else {
+                System.out.println("你输入的原密码不正确！");
+            }
+        }
     }
 
     private void StudentChooseCourse() {
@@ -141,10 +183,15 @@ public class StudentServ {
             if (Objects.equals(command, "1") && page > 1){
                 page--;continue;}
             Course c = getCourseByID(command);
+
             if (c == null) {
                 System.out.println("此课程ID不存在！请重新输入。");
                 continue;
+            }
+            if (Utils.isStudenetChosenSpecificCourse(currentStudent,c)){
+                System.out.println("你已经选择这门课程！请重新选择。");
             } else {
+                System.out.println(currentStudent.getChosenCourses().contains(c));
                 boolean isConfirmed = false;
                 while (true){
                     System.out.println("你选择的课程为：");

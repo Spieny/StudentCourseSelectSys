@@ -12,10 +12,18 @@ public class Student implements Serializable {
     private String studentAge = "100";
     private char studentSex = '男';//性别
     private double score = 0.0; //学分
-    private String password = "666666"; //默认密码身份证后六位
+    private String password = "666666"; //默认密码
     private ArrayList<Course> chosenCourses = new ArrayList<>();
     //待添加......
+    private int loginTimes = 0;
 
+    public int getLoginTimes() {
+        return loginTimes;
+    }
+
+    public void setLoginTimes(int loginTimes) {
+        this.loginTimes = loginTimes;
+    }
 
     public Student(String studentName, String studentAge, char studentSex, String password, ArrayList<Course> chosenCourses) {
         this.studentName = studentName;
@@ -106,7 +114,11 @@ public class Student implements Serializable {
 
     public String toStringLine(){
         updateScore();
-        return "(" + studentID + ") " + studentName  + " " + studentSex;
+        if (loginTimes >= 3){
+            return "(" + studentID + ") " + studentName  + " " + studentSex + " [账号异常]";
+        } else {
+            return "(" + studentID + ") " + studentName  + " " + studentSex;
+        }
     }
 
     public String getChosenCoursesString(){
