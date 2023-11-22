@@ -1,7 +1,5 @@
 package com.ziahh.modules;
 
-import com.ziahh.Utils;
-
 import java.util.Scanner;
 
 public class MainServ {

@@ -7,6 +7,7 @@ import com.ziahh.beans.Student;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Scanner;
 
 public class StudentServ {
@@ -14,7 +15,7 @@ public class StudentServ {
     private static Scanner sc = new Scanner(System.in);
     private static ArrayList<Student> studentAccounts = new ArrayList<>();
     private Student currentStudent = null;
-    private String[] lastQueriedResult;
+    private Random r = new Random();
 
     public static void setStudentAccounts(ArrayList<Student> studentAccounts) {
         StudentServ.studentAccounts = studentAccounts;
@@ -44,7 +45,90 @@ public class StudentServ {
     }
 
     public void run(){
-        login();
+
+        while(quitFlag){
+            System.out.println("========> 广东原神大学教务处 学生处 <========");
+            System.out.println("1.登录账号 2.找回密码");
+            System.out.println("0.退出系统");
+            String in = sc.next();
+            switch (in){
+                case "1":
+                    login();
+                    break;
+                case "2":
+                    resetPassword();
+                    break;
+                case "0":
+                    quitFlag = false;
+                    break;
+                default:
+                    System.out.println("指令有误！请重新输入。");
+            }
+        }
+        quitFlag = true;
+    }
+
+    public void resetPassword(){
+        System.out.println("请输入您的姓名：");
+        String name = sc.next();
+
+        System.out.println("请输入您的学号");
+        String studentID = sc.next();
+
+        Student s = getStudentbyID(studentID);
+        if (s == null || !(s.getStudentName().equals(name))){
+            System.out.println(s == null);
+            if (s != null) {
+                System.out.println(s.getStudentName());
+            }
+            System.out.println("对不起，此学生不存在，请检查输入。");
+            return;
+        }
+
+        ArrayList<Course> courseList = new ArrayList<>();
+        int size = AdminServ.getAllCourses().size();
+        int i = r.nextInt(0,size-6);
+        int max = i + 5;
+        int count = 0; //随机课表中学生实际选择的课程数量
+
+        //随机导入5个课程
+        for (;i<max;i++){
+            courseList.add(AdminServ.getAllCourses().get(i));
+        }
+        //计数
+        for (Course c1 : s.getChosenCourses()) {
+            for (Course c2 : courseList) {
+                if (c1.getCourseId().equals(c2.getCourseId())) {
+                    count++;
+                }
+            }
+        }
+        //输出随机挑出的课程
+        System.out.println("==============================");
+        for (Course c: courseList) {
+            System.out.println(c.toStringLine());
+        }
+        System.out.println("==============================");
+
+        //验证
+        while (true){
+            System.out.println("请输入以上课表中，你本学期选择过的课程的数量：");
+            String in = sc.next();
+            if (Utils.requireLegalAge(in)){
+                int num = Integer.parseInt(in);
+                if(num == count){
+                    System.out.println("验证成功！");
+                    s.setLoginTimes(0);
+                    StudentChangePassword(s);
+                    break;
+                } else {
+                    System.out.println("验证错误！退出界面。");
+                    return;
+                }
+            } else {
+                System.out.println("你输入的数字格式有误~");
+            }
+        }
     }
 
     public void login(){
@@ -102,7 +186,7 @@ public class StudentServ {
         System.out.println("1.选择课程 2.退选课程 3.查询课表 4.个人信息");
         System.out.println("5.修改密码");
         System.out.println("0.退出系统");
-            String in = sc.next();
+        String in = sc.next();
             switch (in){
                 case "1":
                     StudentChooseCourse();
@@ -129,6 +213,25 @@ public class StudentServ {
             }
         }
         quitFlag = true;
+    }
+
+    private void StudentChangePassword(Student s) {
+        while (true){
+            System.out.println("请输入您的新密码：");
+            String newPassword = sc.next();
+            System.out.println("请再次输入您的新密码：");
+            String confirmPassword = sc.next();
+
+            if (confirmPassword.equals(newPassword)){
+                s.setPassword(newPassword);
+                System.out.println("修改密码成功！请牢记新密码！");
+                DataWriter.writeAll();
+                break;
+            } else {
+                System.out.println("两次输入的密码不一致！");
+            }
+        }
+
     }
 
     private void StudentChangePassword() {
