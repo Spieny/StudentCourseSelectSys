@@ -8,12 +8,14 @@ import com.ziahh.enums.WeekDay;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class AdminServ{
 
     private static Scanner sc = new Scanner(System.in);
+    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
     private static ArrayList<Admin> adminAccounts = new ArrayList<>();
     private static ArrayList<Course> allCourses = new ArrayList<>();
     private static Admin currentLoginedAdmin = null;
@@ -44,19 +46,22 @@ public class AdminServ{
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime lt = LocalTime.parse("08:10",dtf);
         LocalTime lt2 = LocalTime.parse("10:00",dtf);
+        ArrayList<WeekDay> weekDays = new ArrayList<>();
+        weekDays.add(WeekDay.MONDAY);
+        weekDays.add(WeekDay.FRIDAY);
         //默认管理员
         adminAccounts.add(new Admin("超级管理员","admin","admin"));
         //Test
-        allCourses.add(new Course("高等数学","苏绿","明德楼B5202",8.5,lt,lt2, WeekDay.MONDAY));
-        allCourses.add(new Course("大学物理实验","高超","图海楼333",5.5,lt,lt2, WeekDay.MONDAY));
-        allCourses.add(new Course("程序设计基础","跟上赵叔的节奏","明德楼B2301",4,lt,lt2, WeekDay.MONDAY));
-        allCourses.add(new Course("大学物理","莫莫","钟海楼05031",4,lt,lt2, WeekDay.MONDAY));
-        allCourses.add(new Course("大学英语读写I","卓超","钟海楼04033",2,lt,lt2, WeekDay.MONDAY));
-        allCourses.add(new Course("大学英语听说I","吴Jafeng","兴教楼303",2,lt,lt2, WeekDay.MONDAY));
-        allCourses.add(new Course("定向越野","新华","体育馆",2,lt,lt2, WeekDay.MONDAY));
-        allCourses.add(new Course("大学心理健康","唐立平","钟海楼03020",2,lt,lt2, WeekDay.MONDAY));
-        allCourses.add(new Course("思想道德与法治","刘伟","钟海楼04024",2,lt,lt2, WeekDay.MONDAY));
-        allCourses.add(new Course("劳动教育","宋蕾","钟海楼05030",0,lt,lt2, WeekDay.MONDAY));
+        allCourses.add(new Course("高等数学","苏绿","明德楼B5202",8.5,lt,lt2, weekDays));
+        allCourses.add(new Course("大学物理实验","高超","图海楼333",5.5,lt,lt2, weekDays));
+        allCourses.add(new Course("程序设计基础","跟上赵叔的节奏","明德楼B2301",4,lt,lt2, weekDays));
+        allCourses.add(new Course("大学物理","莫莫","钟海楼05031",4,lt,lt2, weekDays));
+        allCourses.add(new Course("大学英语读写I","卓超","钟海楼04033",2,lt,lt2, weekDays));
+        allCourses.add(new Course("大学英语听说I","吴Jafeng","兴教楼303",2,lt,lt2, weekDays));
+        allCourses.add(new Course("定向越野","新华","体育馆",2,lt,lt2, weekDays));
+        allCourses.add(new Course("大学心理健康","唐立平","钟海楼03020",2,lt,lt2, weekDays));
+        allCourses.add(new Course("思想道德与法治","刘伟","钟海楼04024",2,lt,lt2, weekDays));
+        allCourses.add(new Course("劳动教育","宋蕾","钟海楼05030",0,lt,lt2, weekDays));
     }
 
     public void run(){
@@ -115,6 +120,7 @@ public class AdminServ{
             System.out.println(" 1.添加学生  2.删除学生  3.修改学生  4.查询学生");
             System.out.println(" 5.添加课程  6.修改课程  7.查询课程  8.未知领域");
             System.out.println(" 0.退出系统");
+            System.out.println("============================================");
             System.out.println(" 输入指令：");
             String in = sc.next();
             switch (in){
@@ -140,12 +146,7 @@ public class AdminServ{
                     queryCourse();
                     break;
                 case "8":
-                    try {
-                        Utils.writeObjectToFile();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    //System.out.println("前面的区域，以后再来探索吧");
+                    System.out.println("前面的区域，以后再来探索吧");
                     break;
                 case "0":
                     System.out.println("===退出管理系统===");
@@ -197,6 +198,8 @@ public class AdminServ{
         System.out.println("输入 t 修改课程教师");
         System.out.println("输入 c 修改课程教室");
         System.out.println("输入 s 修改课程学分");
+        System.out.println("输入 time 修改课程学分");
+        System.out.println("输入 wd 修改课程学分");
         command = sc.next();
         switch (command){
             case "n":
@@ -226,8 +229,90 @@ public class AdminServ{
                     }
                 }
                 break;
+            case "time":
+                LocalTime start = null;
+                LocalTime end = null;
+
+                while (true){
+                    try{
+                        System.out.println("请输入课程的上课时间（mm:ss）：");
+                        start = LocalTime.parse(sc.next(),dtf);
+                        c.setStartTime(start);
+                        break;
+                    } catch (Exception e){
+                        System.out.println("你输入的时间有误！请重试。");
+                        continue;
+                    }
+                }
+
+                while (true){
+                    try{
+                        System.out.println("请输入课程的下课时间（mm:ss）：");
+                        end = LocalTime.parse(sc.next(),dtf);
+                    } catch (Exception e){
+                        System.out.println("你输入的时间有误！请重试。");
+                        continue;
+                    }
+
+                    if (!end.isAfter(start)){
+                        System.out.println("结束时间不能在开始时间之前！重新输入！");
+                    } else {
+                        c.setEndTime(end);
+                        break;
+                    }
+                }
+                break;
+            case "wd":
+                ArrayList<WeekDay> weekdays = new ArrayList<>();
+                System.out.println("请输入上课的星期：");
+                System.out.println("整数[0-6] : 星期日-星期六");
+                System.out.println("提示：输入 -1 退出输入星期");
+                while (true){
+                    boolean quitFlag = false;
+                    String weekdayInput = sc.next();
+                    switch (weekdayInput){
+                        case "1":
+                            weekdays.add(WeekDay.MONDAY);
+                            break;
+                        case "2":
+                            weekdays.add(WeekDay.TUESDAY);
+                            break;
+                        case "3":
+                            weekdays.add(WeekDay.WEDNESDAY);
+                            break;
+                        case "4":
+                            weekdays.add(WeekDay.THURSDAY);
+                            break;
+                        case "5":
+                            weekdays.add(WeekDay.FRIDAY);
+                            break;
+                        case "6":
+                            weekdays.add(WeekDay.SATURDAY);
+                            break;
+                        case "0":
+                            weekdays.add(WeekDay.SUNDAY);
+                            break;
+                        case "-1":
+                            if (weekdays.isEmpty()){
+                                System.out.println("至少需要输入一天！");
+                                continue;
+                            } else {
+                                quitFlag = true;
+                                break;
+                            }
+                        default:
+                            System.out.println("你输入的内容有误！");
+                            break;
+                    }
+                    if (quitFlag){
+                        c.setWeekdays(weekdays);
+                        break;
+                    }
+                }
+                break;
             default:
                 System.out.println("未知指令，请重试！");
+                break;
         }
         System.out.println("修改完成！课程信息如下：");
         System.out.println(c);
@@ -248,13 +333,25 @@ public class AdminServ{
             }
             System.out.println("------- 第" + page + "页 -------");
             System.out.println("输入 1 返回上一页 | 输入 2 进入下一页 | 输入 0 退出查询");
-            command = sc.nextInt();
-            if (command == 0){
-                break;}
-            if (command == 2 && page < (allCourses.size() / 5) + 1){
-                page++;}
-            if (command == 1 && page > 1){
-                page--;}
+            String courseID = sc.next();
+            if (courseID.equals("2") && page < (allCourses.size() / 5) + 1){
+                page++;
+                continue;//如果输入的是翻页指令，直接跳过下面的代码
+            }
+            if (courseID.equals("1") && page > 1){
+                page--;
+                continue;//如果输入的是翻页指令，直接跳过下面的代码
+            }
+            if (courseID.equals("0")){
+                System.out.println("退出查询......");
+                break;
+            }
+            Course c = getCourseByID(courseID);
+            if (c == null){
+                System.out.println("你查找的课程不存在！");
+            } else {
+                System.out.println(c);
+            }
         }
     }
 
@@ -266,6 +363,86 @@ public class AdminServ{
         newCourse.setCourseTeacher(sc.next());
         System.out.println("请输入课程的教室：");
         newCourse.setCourseClassroom(sc.next());
+
+        LocalTime start = null;
+        LocalTime end = null;
+
+        while (true){
+            try{
+                System.out.println("请输入课程的上课时间（mm:ss）：");
+                start = LocalTime.parse(sc.next(),dtf);
+                newCourse.setStartTime(start);
+                break;
+            } catch (Exception e){
+                System.out.println("你输入的时间有误！请重试。");
+                continue;
+            }
+        }
+
+        while (true){
+            try{
+                System.out.println("请输入课程的下课时间（mm:ss）：");
+                end = LocalTime.parse(sc.next(),dtf);
+            } catch (Exception e){
+                System.out.println("你输入的时间有误！请重试。");
+                continue;
+            }
+
+            if (!end.isAfter(start)){
+                System.out.println("结束时间不能在开始时间之前！重新输入！");
+            } else {
+                newCourse.setEndTime(end);
+                break;
+            }
+        }
+
+        ArrayList<WeekDay> weekdays = new ArrayList<>();
+        System.out.println("请输入上课的星期：");
+        System.out.println("整数[0-6] : 星期日-星期六");
+        System.out.println("提示：输入 -1 退出输入星期");
+        while (true){
+            boolean quitFlag = false;
+            String weekdayInput = sc.next();
+            switch (weekdayInput){
+                case "1":
+                    weekdays.add(WeekDay.MONDAY);
+                    break;
+                case "2":
+                    weekdays.add(WeekDay.TUESDAY);
+                    break;
+                case "3":
+                    weekdays.add(WeekDay.WEDNESDAY);
+                    break;
+                case "4":
+                    weekdays.add(WeekDay.THURSDAY);
+                    break;
+                case "5":
+                    weekdays.add(WeekDay.FRIDAY);
+                    break;
+                case "6":
+                    weekdays.add(WeekDay.SATURDAY);
+                    break;
+                case "0":
+                    weekdays.add(WeekDay.SUNDAY);
+                    break;
+                case "-1":
+                    if (weekdays.isEmpty()){
+                        System.out.println("至少需要输入一天！");
+                        continue;
+                    } else {
+                        quitFlag = true;
+                        break;
+                    }
+                default:
+                    System.out.println("你输入的内容有误！");
+                    break;
+            }
+            if (quitFlag){
+                break;
+            }
+        }
+
+        newCourse.setWeekdays(weekdays);
         allCourses.add(newCourse);
         System.out.println("添加课程成功：");
         System.out.println(newCourse);

@@ -5,6 +5,9 @@ import com.ziahh.enums.WeekDay;
 
 import java.io.Serializable;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringJoiner;
 
 public class Course implements Serializable {
 
@@ -15,15 +18,7 @@ public class Course implements Serializable {
     private double courseScore;
     private LocalTime startTime;
     private LocalTime endTime;
-    private WeekDay weekday;
-
-    public WeekDay getWeekday() {
-        return weekday;
-    }
-
-    public void setWeekday(WeekDay weekday) {
-        this.weekday = weekday;
-    }
+    private ArrayList<WeekDay> weekdays;
 
     public LocalTime getStartTime() {
         return startTime;
@@ -41,7 +36,15 @@ public class Course implements Serializable {
         this.endTime = endTime;
     }
 
-    public Course(String courseName, String courseTeacher, String courseClassroom, double courseScore, LocalTime startTime, LocalTime endTime,WeekDay day) {
+    public ArrayList<WeekDay> getWeekdays() {
+        return weekdays;
+    }
+
+    public void setWeekdays(ArrayList<WeekDay> weekdays) {
+        this.weekdays = weekdays;
+    }
+
+    public Course(String courseName, String courseTeacher, String courseClassroom, double courseScore, LocalTime startTime, LocalTime endTime, ArrayList<WeekDay> weekdays) {
         this.courseId = Utils.generateCourseID();
         this.courseName = courseName;
         this.courseTeacher = courseTeacher;
@@ -49,7 +52,7 @@ public class Course implements Serializable {
         this.courseScore = courseScore;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.weekday = day;
+        this.weekdays = weekdays;
     }
 
     public double getCourseScore() {
@@ -102,9 +105,19 @@ public class Course implements Serializable {
                 + "ID：'" + courseId + '\'' + "\n"
                 + "名称：'" + courseName+ '\''+ "\n"
                 + "教室：'" + courseClassroom + '\'' + "\n"
-                + "教师：" + courseTeacher + '\''+ "\n"
-                + "学分：" + courseScore + '\''+ "\n"
+                + "教师：" + '\'' + courseTeacher + '\''+ "\n"
+                + "学分：" + '\'' + courseScore + '\''+ "\n"
+                + "上课时间：" + '\'' + startTime + "——" + endTime + '\''+ "\n"
+                + "         '" + getWeekdaysString() + '\''+ "\n"
                 + "=========================";
+    }
+
+    private String getWeekdaysString(){
+        StringJoiner sb = new StringJoiner(",");
+        for (WeekDay w : weekdays){
+            sb.add(w.toString());
+        }
+        return sb.toString();
     }
 
     public String toStringLine(){

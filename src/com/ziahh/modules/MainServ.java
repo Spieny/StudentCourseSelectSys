@@ -25,6 +25,7 @@ public class MainServ {
     }
 
     public void run(){
+        AdminServ.init();
         System.out.println("读取数据中......");
         DataReader.readAll();
         while(true){
