@@ -26,7 +26,7 @@ public class StudentServ {
     }
 
     //注入数据，方便测试，后期删掉
-    /*public static void init(){
+    public static void init(){
         ArrayList<Course> courses = new ArrayList<>();
         courses.add(AdminServ.getAllCourses().get(0));
         studentAccounts.add(new Student("黄萎病","18",'男',"114514",courses));
@@ -37,7 +37,7 @@ public class StudentServ {
         studentAccounts.add(new Student("青萎病","31",'男',"114514",courses));
         studentAccounts.add(new Student("南通萎病","24",'男',"114514",courses));
         studentAccounts.add(new Student("橙萎病","20",'男',"114514",courses));
-    }*/
+    }
 
     private boolean quitFlag = true;
 

@@ -8,7 +8,6 @@ import com.ziahh.enums.WeekDay;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -198,8 +197,8 @@ public class AdminServ{
         System.out.println("输入 t 修改课程教师");
         System.out.println("输入 c 修改课程教室");
         System.out.println("输入 s 修改课程学分");
-        System.out.println("输入 time 修改课程学分");
-        System.out.println("输入 wd 修改课程学分");
+        System.out.println("输入 time 修改课程上课时间");
+        System.out.println("输入 wd 修改上课星期");
         command = sc.next();
         switch (command){
             case "n":
@@ -699,6 +698,5 @@ public class AdminServ{
         }
         return null;
     }
-
 
 }

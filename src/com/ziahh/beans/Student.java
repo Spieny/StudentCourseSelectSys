@@ -89,6 +89,7 @@ public class Student implements Serializable {
 
     @Override
     public String toString() {
+        updateScore();
         return "===========[学生基本消息]===========\n"
                 + "姓名：'" + studentName + '\'' + "\n"
                 + "学号：'" + studentID + '\''+ "\n"
@@ -109,8 +110,9 @@ public class Student implements Serializable {
     }
 
     public String getChosenCoursesString(){
+        updateScore();
         StringBuilder sb = new StringBuilder();
-        sb.append("=========== 学生").append(getStudentName()).append("已选课程 ===========\n");
+        sb.append("=============== 学生").append(getStudentName()).append("已选课程 ===============\n");
         if (this.chosenCourses.isEmpty()){
             sb.append("你还没有选择任何课程\n");
         } else {
@@ -118,7 +120,7 @@ public class Student implements Serializable {
                 sb.append(e.toStringLine()).append("\n");
             }
         }
-        sb.append("=========== 学生").append(getStudentName()).append("已选课程 ===========");
+        sb.append("=============== 学生").append(getStudentName()).append("已选课程 ===============");
         return sb.toString();
     }
 
